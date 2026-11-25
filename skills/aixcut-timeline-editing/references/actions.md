@@ -28,7 +28,7 @@ Same-name fields keep the same meaning across Tools:
 
 On split actions `to_ms` is only a legacy alias of `at_ms`; pass `at_ms`. A split value below the clip's `start_ms` is read as an offset inside the clip.
 
-Volume, fade lengths and text style are top-level fields of their action, not `values` entries: `aixcut_audio(action="update", target=…, volume=0.35)` and `aixcut_clip(action="update", target=…, volume=0.35)` for a video clip's own sound. Putting them inside `values` is rejected with a hint. A tool that edits audio clips needs an audio clip: pointing `aixcut_audio` at a video clip is refused with `MCP_REF_KIND_MISMATCH`.
+Volume/gain (`gain_db` or legacy `volume`), fade lengths and text style are top-level fields of their action, not `values` entries: prefer `aixcut_audio(action="update", target=…, gain_db=-12)` (0 dB = original level, `null` = mute; legacy `volume` 0–1 linear multiplier is still accepted) and `aixcut_clip(action="update", target=…, gain_db=-12)` for a video clip's own sound. Putting them inside `values` is rejected with a hint. A tool that edits audio clips needs an audio clip: pointing `aixcut_audio` at a video clip is refused with `MCP_REF_KIND_MISMATCH`.
 
 Text style numbers are canvas pixels, except `maxWidth`: a value between 0 and 1 is read as that fraction of the canvas width, so `maxWidth: 0.88` means 88% of the width (writing 0.88px would collapse the text into one character per line).
 
@@ -64,7 +64,7 @@ Replace the playback example's timeline ID and revision with values from the cur
 | Group | Fields |
 | --- | --- |
 | Time | `source_start_ms`, `start_ms`, `duration_ms`, `end_ms`, `at_ms`, `to_ms`, `rate` |
-| Columns | `enabled`, `label`, `kind`, `volume`, `values` |
+| Columns | `enabled`, `label`, `kind`, `gain_db`, `volume`, `values` |
 | Fades | `fade_in_ms`, `fade_out_ms` |
 | Text | `text`, `style`, `highlight_ranges`, `x`, `y` |
 | Target | `target`, `targets` |
@@ -77,7 +77,7 @@ Fields must match the clip type. Invalid combinations are rejected rather than s
 | `style` | Text and captions | The Composition text node's `style`; keys must come from the allowlist below |
 | `highlight_ranges` | Text and captions | Highlighted character ranges of the text node; each item is a `{ start, end }` range |
 | `x`, `y` | Text and captions | Position as a 0–1 canvas ratio |
-| `volume` | Audio and video | Playback volume from 0 to 1 |
+| `gain_db` / `volume` | Audio and video | Preferred `gain_db` in dB (`0` = original, negative = quieter, `null` = mute); legacy `volume` accepts 0–1 linear multiplier |
 | `values` | All | Column overrides; unknown column names are rejected |
 
 Text and captions are stored as a Composition author tree, so `style` is folded into the text node's own `style`. The allowlist is closed:
@@ -208,7 +208,7 @@ For `aixcut_text(action="add")`, per-item `start_ms` and `duration_ms` belong in
 | aixcut_text(action="merge") | — | `targets` | `separator` | Merge text clips into their real timeline window |
 | aixcut_audio(action="add") | — | `items` | `start_ms`, `duration_ms`, fades, track | Add audio clips; top-level values are item defaults |
 | aixcut_audio(action="set") | — | `track`, `items` | — | Replace every audio clip on one track |
-| aixcut_audio(action="update") | — | `target` | Columns, time, `volume` | Update audio fields and volume |
+| aixcut_audio(action="update") | — | `target` | Columns, time, `gain_db` / `volume` | Update audio fields and gain/volume |
 | aixcut_audio(action="replace") | — | `target`, `source` | — | Replace an audio source |
 | aixcut_audio(action="delete") | — | `target` | — | Delete an audio clip |
 | aixcut_audio(action="trim") | — | `target` | Time fields | Trim an audio clip |

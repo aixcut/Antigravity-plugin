@@ -28,7 +28,7 @@ This Skill defines how Aixcut workflows integrate with **Antigravity**.
 - Supported local-media routes in Antigravity:
   1. **Project upload prompt (preferred for interactive browser sessions)**: call `aixcut_frontend(action="prompt_add_material")` to open the Project's upload area for the user, wait for confirmation, and verify in `aixcut_read(view="sources")`.
   2. **Upload link**: call `aixcut_upload_link` to provide a browser upload link when no active Project page is open.
-  3. **Direct upload (only when the user explicitly provides local file path(s) and asks the agent to upload them)**: use `aixcut_media(action="prepare_upload")` + signed upload + `aixcut_media(action="confirm_upload")`, then verify via `aixcut_read(view="sources")`.
+  3. **Direct upload (only when the user explicitly provides local file path(s) and asks the agent to upload them)**: use `aixcut_media(action="prepare_upload")` + signed upload + `aixcut_media(action="complete_upload")`, then verify via `aixcut_read(view="sources")`.
 
 ## 4. Planning, Checkpoints & Visual Inspection
 
@@ -39,4 +39,4 @@ This Skill defines how Aixcut workflows integrate with **Antigravity**.
 
 - Browser rendering (`aixcut_frontend(action="export_timeline")`) is usable only when the target Project page is online (`page_status`) and its `capabilities` include `export_timeline`.
 - Browser export success means the download was dispatched; report `delivery.state` and `file_verified=false` unless a verified local path is confirmed.
-- Server-side render (`aixcut_render`) produces a downloadable artifact URL once the job reaches terminal success; verify status before delivering.
+- Server-side headless render (`aixcut_export`) produces a downloadable artifact URL once the job reaches terminal success; verify status before delivering.

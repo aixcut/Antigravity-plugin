@@ -99,7 +99,7 @@ Treat every requested visual annotation as a typed timeline element before writi
 - Canvas presets are `landscape|fhd|fullhd|1080p` = 1920×1080, `portrait|vertical` = 1080×1920, `square` = 1080×1080, `hd|720p` = 1280×720, and `uhd|4k` = 3840×2160. An unknown preset returns `MCP_CANVAS_PRESET_INVALID`; it is never silently ignored. `aixcut_timeline(action="create")` does not accept canvas fields; create first, then call `aixcut_timeline(action="update", ...)`.
 - `aixcut_read` clip-list views (`clips`, `captions`, `text`, `audio`) accept top-level `track` and `kind` filters, and also the legacy nested `filters.track_id` and `filters.kind` forms. The top-level form is preferred.
 - A caption `update` that only changes clip columns such as `start_ms` or `duration_ms` does not require text component values. Add `text`, `style`, `x`, or `y` only when the component itself must change.
-- Add music, effects, or rendered voice through `aixcut_audio(action="add")`. Use `fade_in_ms` and `fade_out_ms` for music. Volume is not an add field: after adding, read the created clip ref and call `aixcut_audio(action="update", target="clip:...", volume=0.2–0.4)` when narration must remain clear.
+- Add music, effects, or rendered voice through `aixcut_audio(action="add")`. Use `fade_in_ms` and `fade_out_ms` for music. Gain/volume is not an add field: after adding, read the created clip ref and call `aixcut_audio(action="update", target="clip:...", gain_db=-14)` (typically `-18` to `-10` dB under voice/narration, `0` = original, `null` = mute; legacy `volume=0.2–0.4` still works) when narration must remain clear.
 - When the user wants a video's original sound separately, call `aixcut_frontend(action="media.extract_audio", params={media_id: ..., expected_file_revision: ...})`, then poll `aixcut_frontend(action="operation.get", params={operation_id: ...})` until it succeeds, and add the resulting published audio media. Never send a video media ref directly to `aixcut_audio(action="add")`.
 - Before adding audio, ensure an audio track exists with `aixcut_track(action="ensure")`. If read-back reports `MCP_TRACK_ENSURE_NOT_APPLIED`, retry once with a new UUID.
 - Change track mute or enabled state only after reading the current track state.
@@ -116,7 +116,7 @@ Before every audio write, read the current timeline and track list, then confirm
 
 Before muting a video item's source audio, inspect its component roster. If the item has no `audio` component or audio payload, it has nothing to mute: report the structural fact and do not call `aixcut_audio(action="update")` or guess an audio ref. Video-only B-roll does not require a mute write.
 
-Only add BGM/music when it is explicitly enabled, requested, or confirmed. When music is enabled, place it on its own track with both fade-in and fade-out; after read-back, lower its volume through `aixcut_audio(action="update", target="clip:...", volume=0.2–0.4)` under voice or narration. Leave optional or unmentioned music off until confirmation. SFX follows the same separate-track and range-confirmation rule.
+Only add BGM/music when it is explicitly enabled, requested, or confirmed. When music is enabled, place it on its own track with both fade-in and fade-out; after read-back, lower its level through `aixcut_audio(action="update", target="clip:...", gain_db=-14)` (typically `-18` to `-10` dB; legacy `volume=0.2–0.4` still accepted) under voice or narration. Leave optional or unmentioned music off until confirmation. SFX follows the same separate-track and range-confirmation rule.
 
 ## Local media
 

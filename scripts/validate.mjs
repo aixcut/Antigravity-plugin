@@ -50,6 +50,9 @@ export const FORBIDDEN_PATTERNS = [
   /NODE_OPTIONS/,
   /<plugin-root>/,
   /plugin:\/\//,
+  /\baixcut_render\b/,
+  /\baixcut_operation\b/,
+  /\bconfirm_upload\b/,
 ];
 
 function walkFiles(dir, result = []) {
