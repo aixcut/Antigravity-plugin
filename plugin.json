@@ -1,0 +1,18 @@
+{
+  "name": "aixcut",
+  "displayName": "Aixcut",
+  "description": "AI video editing in Antigravity for talking-head fine cuts, livestream clips, e-commerce feed ads, TV commercials, and batch content production via Aixcut Studio.",
+  "version": "1.0.0",
+  "author": {
+    "name": "CSEQ Labs",
+    "url": "https://aixcut.com"
+  },
+  "homepage": "https://aixcut.com",
+  "repository": "https://github.com/aixcut/Antigravity-plugin",
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "Open my Aixcut projects and inspect the current timeline before editing.",
+    "Do a talking-head fine cut: remove silences and retakes, sync captions, and add subtle BGM.",
+    "Turn my raw footage into a 30-second high-conversion e-commerce feed ad with captions and pacing."
+  ]
+}

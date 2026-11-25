@@ -1,0 +1,12 @@
+{
+  "name": "@aixcut/antigravity-plugin",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Official Aixcut AI video editing plugin for Google Antigravity",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "package": "node scripts/package-antigravity.mjs"
+  }
+}
